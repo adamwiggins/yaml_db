@@ -73,15 +73,13 @@ describe YamlDb::Load do
 	end
 
 	it "should call reset pk sequence if the connection adapter is postgres" do
-		module ActiveRecord; module ConnectionAdapters; class PostgreSQLAdapter; end; end; end;
-		ActiveRecord::Base.connection.stub!(:kind_of?).with(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter).and_return(true)
+		ActiveRecord::Base.connection.should_receive(:respond_to?).with(:reset_pk_sequence!).and_return(true)
 		ActiveRecord::Base.connection.should_receive(:reset_pk_sequence!).with('mytable')
 		YamlDb::Load.reset_pk_sequence!('mytable')
 	end
 
-	it "should not call reset_pk_sequence if the connection adapter is not postgres" do
-		module ActiveRecord; module ConnectionAdapters; class PostgreSQLAdapter; end; end; end;
-		ActiveRecord::Base.connection.stub!(:kind_of?).with(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter).and_return(false)
+	it "should not call reset pk sequence for other adapters" do
+		ActiveRecord::Base.connection.should_receive(:respond_to?).with(:reset_pk_sequence!).and_return(false)
 		ActiveRecord::Base.connection.should_not_receive(:reset_pk_sequence!)
 		YamlDb::Load.reset_pk_sequence!('mytable')
 	end
