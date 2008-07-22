@@ -70,9 +70,13 @@ end
 
 module YamlDb::Dump
 	def self.dump(io)
-		ActiveRecord::Base.connection.tables.each do |table|
+		tables.each do |table|
 			dump_table(io, table)
 		end
+	end
+
+	def self.tables
+		ActiveRecord::Base.connection.tables.reject { |table| ['schema_info', 'schema_migrations'].include?(table) }
 	end
 
 	def self.dump_table(io, table)

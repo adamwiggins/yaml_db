@@ -6,7 +6,7 @@ describe YamlDb::Dump do
 
 		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
 		ActiveRecord::Base.connection = mock('connection')
-		ActiveRecord::Base.connection.stub!(:tables).and_return([ 'mytable' ])
+		ActiveRecord::Base.connection.stub!(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
 		ActiveRecord::Base.connection.stub!(:columns).with('mytable').and_return([ mock('a',:name => 'a'), mock('b', :name => 'b') ])
 		ActiveRecord::Base.connection.stub!(:select_one).and_return({"count"=>"2"})
 		ActiveRecord::Base.connection.stub!(:select_all).and_return([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
@@ -24,6 +24,10 @@ describe YamlDb::Dump do
 
 	it "should return a list of column names" do
 		YamlDb::Dump.table_column_names('mytable').should == [ 'a', 'b' ]
+	end
+
+	it "should return a list of tables without the rails schema table" do
+		YamlDb::Dump.tables.should == ['mytable']
 	end
 
 	it "should return the total number of records in a table" do
