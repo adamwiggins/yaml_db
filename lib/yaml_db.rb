@@ -113,8 +113,10 @@ module YamlDb::Dump
 		boolean_columns = YamlDb::Utils.boolean_columns(table)
 		
 		(0..pages).to_a.each do |page|
-			sql_limit = "LIMIT #{records_per_page} OFFSET #{records_per_page*page}"
-			records = ActiveRecord::Base.connection.select_all("SELECT * FROM #{table} ORDER BY #{id} #{sql_limit}")
+			sql = ActiveRecord::Base.connection.add_limit_offset!("SELECT * FROM #{table} ORDER BY #{id}",
+				:limit => records_per_page, :offset => records_per_page * page
+			)
+			records = ActiveRecord::Base.connection.select_all(sql)
 			records = YamlDb::Utils.convert_booleans(records, boolean_columns)
 			yield records
 		end
