@@ -27,7 +27,7 @@ One common use would be to switch your data from one database backend to another
 
 == Credits
 
-Created by Orion Henry and Adam Wiggins.  Major updates by Ricardo Chimal, Jr.  Patches contributed by Michael Irwin.
+Created by Orion Henry and Adam Wiggins.  Major updates by Ricardo Chimal, Jr.  Patches contributed by Michael Irwin and Tom Locke.
 
 Send questions, feedback, or patches to the Heroku mailing list: http://groups.google.com/group/heroku
 
