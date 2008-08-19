@@ -65,6 +65,10 @@ module YamlDb::Utils
 	def self.is_boolean(value)
 		value.kind_of?(TrueClass) or value.kind_of?(FalseClass)
 	end
+
+	def self.quote_table(table)
+		ActiveRecord::Base.connection.quote_table_name(table)
+	end
 end
 
 
@@ -115,9 +119,10 @@ module YamlDb::Dump
 		pages = (total_count.to_f / records_per_page).ceil - 1
 		id = table_column_names(table).first
 		boolean_columns = YamlDb::Utils.boolean_columns(table)
+		quoted_table_name = YamlDb::Utils.quote_table(table)
 		
 		(0..pages).to_a.each do |page|
-			sql = ActiveRecord::Base.connection.add_limit_offset!("SELECT * FROM #{table} ORDER BY #{id}",
+			sql = ActiveRecord::Base.connection.add_limit_offset!("SELECT * FROM #{quoted_table_name} ORDER BY #{id}",
 				:limit => records_per_page, :offset => records_per_page * page
 			)
 			records = ActiveRecord::Base.connection.select_all(sql)
@@ -127,7 +132,7 @@ module YamlDb::Dump
 	end
 
 	def self.table_record_count(table)
-		ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{table}").values.first.to_i
+		ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{YamlDb::Utils.quote_table(table)}").values.first.to_i
 	end
 end
 
@@ -146,9 +151,9 @@ module YamlDb::Load
 
 	def self.truncate_table(table)
 		begin
-			ActiveRecord::Base.connection.execute("TRUNCATE #{table}")
+			ActiveRecord::Base.connection.execute("TRUNCATE #{YamlDb::Utils.quote_table(table)}")
 		rescue Exception
-			ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+			ActiveRecord::Base.connection.execute("DELETE FROM #{YamlDb::Utils.quote_table(table)}")
 		end
 	end
 
@@ -161,8 +166,9 @@ module YamlDb::Load
 
 	def self.load_records(table, column_names, records)
 		quoted_column_names = column_names.map { |column| ActiveRecord::Base.connection.quote_column_name(column) }.join(',')
+		quoted_table_name = YamlDb::Utils.quote_table(table)
 		records.each do |record|
-			ActiveRecord::Base.connection.execute("INSERT INTO #{table} (#{quoted_column_names}) VALUES (#{record.map { |r| ActiveRecord::Base.connection.quote(r) }.join(',')})")
+			ActiveRecord::Base.connection.execute("INSERT INTO #{quoted_table_name} (#{quoted_column_names}) VALUES (#{record.map { |r| ActiveRecord::Base.connection.quote(r) }.join(',')})")
 		end
 	end
 
