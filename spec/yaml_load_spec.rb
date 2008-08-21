@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/base'
 describe YamlDb::Load do
 	before do
 		YamlDb::Utils.stub!(:quote_table).with('mytable').and_return('mytable')
+		YamlDb.stub!(:verify_utf8)
 
 		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
 		ActiveRecord::Base.connection = mock('connection')

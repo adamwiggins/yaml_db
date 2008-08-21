@@ -11,6 +11,7 @@ describe YamlDb::Dump do
 		ActiveRecord::Base.connection.stub!(:select_one).and_return({"count"=>"2"})
 		ActiveRecord::Base.connection.stub!(:select_all).and_return([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
 		YamlDb::Utils.stub!(:quote_table).with('mytable').and_return('mytable')
+		YamlDb.stub!(:verify_utf8)
 	end
 
 	before(:each) do
