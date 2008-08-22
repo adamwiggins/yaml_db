@@ -1,6 +1,11 @@
 require File.dirname(__FILE__) + '/base'
 
 describe YamlDb::Utils, " convert records utility method" do
+	before do
+		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
+		ActiveRecord::Base.connection = mock('connection')
+	end
+
 	it "turns an array with one record into a yaml chunk" do
 		YamlDb::Utils.chunk_records([ %w(a b) ]).should == <<EOYAML
   - - a
@@ -31,9 +36,12 @@ EOYAML
 	end
 
 	it "should return an array of boolean columns" do
-		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
-		ActiveRecord::Base.connection = mock('connection')
 		ActiveRecord::Base.connection.stub!(:columns).with('mytable').and_return([ mock('a',:name => 'a',:type => :string), mock('b', :name => 'b',:type => :boolean) ])
 		YamlDb::Utils.boolean_columns('mytable').should == ['b']
+	end
+
+	it "should quote the table name" do
+		ActiveRecord::Base.connection.should_receive(:quote_table_name).with('values').and_return('`values`')
+		YamlDb::Utils.quote_table('values').should == '`values`'
 	end
 end
