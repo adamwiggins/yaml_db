@@ -5,16 +5,12 @@ require 'active_record'
 
 module YamlDb
 	def self.dump(filename)
-		verify_utf8
-
 		disable_logger
 		YamlDb::Dump.dump(File.new(filename, "w"))
 		reenable_logger
 	end
 
 	def self.load(filename)
-		verify_utf8
-
 		disable_logger
 		YamlDb::Load.load(File.new(filename, "r"))
 		reenable_logger
@@ -27,22 +23,6 @@ module YamlDb
 
 	def self.reenable_logger
 		ActiveRecord::Base.logger = @@old_logger
-	end
-
-	class EncodingException < RuntimeError; end
-
-	def self.verify_utf8
-		raise "RAILS_ENV is not defined" unless defined?(RAILS_ENV)
-
-		unless ActiveRecord::Base.configurations[RAILS_ENV].has_key?('encoding')
-			raise EncodingException, "Your database.yml configuration needs to specify encoding"
-		end
-
-		unless ['unicode', 'utf8'].include?(ActiveRecord::Base.configurations[RAILS_ENV]['encoding'])
-			raise EncodingException, "Your database encoding must be utf8 (mysql) or unicode (postgres)"
-		end
-
-		true
 	end
 end
 
