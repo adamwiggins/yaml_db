@@ -1,9 +1,8 @@
 require File.dirname(__FILE__) + '/base'
 
 describe YamlDb::Dump do
-	before do
-		File.stub!(:new).with('dump.yml', 'w').and_return(StringIO.new)
 
+	before do
 		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
 		ActiveRecord::Base.connection = mock('connection')
 		ActiveRecord::Base.connection.stub!(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
@@ -13,8 +12,12 @@ describe YamlDb::Dump do
 		YamlDb::Utils.stub!(:quote_table).with('mytable').and_return('mytable')
 	end
 
-	before(:each) do
-		@io = StringIO.new
+    context "for single file yaml dumps" do
+
+
+	before(:each) do   
+	  File.stub!(:new).with('dump.yml', 'w').and_return(StringIO.new)
+	  @io = StringIO.new
 	end
 
 	it "should return a formatted string" do
@@ -90,5 +93,26 @@ EOYAML
 		YamlDb::Dump.should_not_receive(:dump_table_columns)
 		YamlDb::Dump.should_not_receive(:dump_table_records)
 		YamlDb::Dump.dump_table(@io, 'mytable')
-	end
+    end
+
+    end
+
+    context "for multi-file yaml dumps" do
+      before do
+        File.should_receive(:new).once.with("dir_name/mytable").and_return(StringIO.new)
+        File.should_receive(:mkdir).with("dir_name").and_return(true)
+      end
+
+      it "should create the number of files that there are tables" do
+         YamlDb.dump_to_dir "dir_name"
+      end
+
+
+
+    end
+
+
+
+
+
 end

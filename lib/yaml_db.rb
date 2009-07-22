@@ -10,6 +10,14 @@ module YamlDb
 		reenable_logger
 	end
 
+    def self.dump_to_dir(dirname)
+      File.mkdir(dirname)
+      tables = YamlDb::Dump.tables
+      tables.each do |table|
+        File.new(dirname + "/" + table)
+      end
+    end
+
 	def self.load(filename)
 		disable_logger
 		YamlDb::Load.load(File.new(filename, "r"))
