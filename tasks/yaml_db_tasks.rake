@@ -21,9 +21,8 @@ namespace :db do
 
 		desc "Dump contents of database to curr_dir_name/data.ym"
 		task(:dump_dir => :environment) do
-            time_dir = dump_dir "/#{Time.now.to_s}"
-            Dir.mkdir time_dir
-			YamlDb.dump "#{time_dir}/data.yml"
+            time_dir = dump_dir "/#{Time.now.to_s.gsub(/ /, '_')}"
+            YamlDb.dump_to_dir time_dir
 		end
 
 		desc "Load contents of db/data.yml into database"

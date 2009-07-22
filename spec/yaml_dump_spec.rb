@@ -99,15 +99,15 @@ EOYAML
 
     context "for multi-file yaml dumps" do
       before do
-        File.should_receive(:new).once.with("dir_name/mytable").and_return(StringIO.new)
-        File.should_receive(:mkdir).with("dir_name").and_return(true)
+        @io = StringIO.new
+        File.should_receive(:new).once.with("dir_name/mytable.yml", "w").and_return(@io)
+        Dir.should_receive(:mkdir).once.with("dir_name")
+        YamlDb::Dump.should_receive(:dump_table).once.with(@io, "mytable")
       end
 
       it "should create the number of files that there are tables" do
          YamlDb.dump_to_dir "dir_name"
       end
-
-
 
     end
 

@@ -11,10 +11,11 @@ module YamlDb
 	end
 
     def self.dump_to_dir(dirname)
-      File.mkdir(dirname)
+      Dir.mkdir(dirname)
       tables = YamlDb::Dump.tables
       tables.each do |table|
-        File.new(dirname + "/" + table)
+        file = File.new "#{dirname}/#{table}.yml", "w"
+        YamlDb::Dump.dump_table file, table
       end
     end
 
