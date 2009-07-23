@@ -23,17 +23,6 @@ describe YamlDb::Dump do
 		@io.read.should == "  records: \n"
 	end
 
-	it "should return a list of column names" do
-		YamlDb::Dump.table_column_names('mytable').should == [ 'a', 'b' ]
-	end
-
-	it "should return a list of tables without the rails schema table" do
-		YamlDb::Dump.tables.should == ['mytable']
-	end
-
-	it "should return the total number of records in a table" do
-		YamlDb::Dump.table_record_count('mytable').should == 2
-	end
 
 	it "should return a yaml string that contains a table header and column names" do
 		YamlDb::Dump.stub!(:table_column_names).with('mytable').and_return([ 'a', 'b' ])
@@ -49,24 +38,6 @@ mytable:
 EOYAML
 	end
 
-	it "should return all records from the database and return them when there is only 1 page" do
-		YamlDb::Dump.each_table_page('mytable') do |records|
-			records.should == [ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ]
-		end
-	end
-
-	it "should paginate records from the database and return them" do
-		ActiveRecord::Base.connection.stub!(:select_all).and_return([ { 'a' => 1, 'b' => 2 } ], [ { 'a' => 3, 'b' => 4 } ])
-
-		records = [ ]
-		YamlDb::Dump.each_table_page('mytable', 1) do |page|
-			page.size.should == 1
-			records.concat(page)
-		end
-
-		records.should == [ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ]
-	end
-
 	it "should return dump the records for a table in yaml to a given io stream" do
 		YamlDb::Dump.dump_table_records(@io, 'mytable')
 		@io.rewind
@@ -78,19 +49,6 @@ EOYAML
     - 4
 EOYAML
 	end
-
-	it "should dump a table's contents to yaml" do
-		YamlDb::Dump.should_receive(:dump_table_columns)
-		YamlDb::Dump.should_receive(:dump_table_records)
-		YamlDb::Dump.dump_table(@io, 'mytable')
-	end
-
-	it "should not dump a table's contents when the record count is zero" do
-		YamlDb::Dump.stub!(:table_record_count).with('mytable').and_return(0)
-		YamlDb::Dump.should_not_receive(:dump_table_columns)
-		YamlDb::Dump.should_not_receive(:dump_table_records)
-		YamlDb::Dump.dump_table(@io, 'mytable')
-    end
 
 
 

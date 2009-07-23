@@ -102,6 +102,28 @@ class SerializationHelper
       ActiveRecord::Base.connection.columns(table).map { |c| c.name }
     end
 
+
+    def self.each_table_page(table, records_per_page=1000)
+      total_count = table_record_count(table)
+      pages = (total_count.to_f / records_per_page).ceil - 1
+      id = table_column_names(table).first
+      boolean_columns = SerializationHelper::Utils.boolean_columns(table)
+      quoted_table_name = SerializationHelper::Utils.quote_table(table)
+
+      (0..pages).to_a.each do |page|
+        sql = ActiveRecord::Base.connection.add_limit_offset!("SELECT * FROM #{quoted_table_name} ORDER BY #{id}",
+                                                              :limit => records_per_page, :offset => records_per_page * page
+        )
+        records = ActiveRecord::Base.connection.select_all(sql)
+        records = SerializationHelper::Utils.convert_booleans(records, boolean_columns)
+        yield records
+      end
+    end
+
+    def self.table_record_count(table)
+      ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{SerializationHelper::Utils.quote_table(table)}").values.first.to_i
+    end    
+
   end
 
 end
