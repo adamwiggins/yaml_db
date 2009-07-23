@@ -27,40 +27,6 @@ module YamlDb
       yaml
     end
 
-    def self.unhash(hash, keys)
-      keys.map { |key| hash[key] }
-    end
-
-    def self.unhash_records(records, keys)
-      records.each_with_index do |record, index|
-        records[index] = unhash(record, keys)
-      end
-
-      records
-    end
-
-    def self.convert_booleans(records, columns)
-      records.each do |record|
-        columns.each do |column|
-          next if is_boolean(record[column])
-          record[column] = (record[column] == 't' or record[column] == '1')
-        end
-      end
-      records
-    end
-
-    def self.boolean_columns(table)
-      columns = ActiveRecord::Base.connection.columns(table).reject { |c| c.type != :boolean }
-      columns.map { |c| c.name }
-    end
-
-    def self.is_boolean(value)
-      value.kind_of?(TrueClass) or value.kind_of?(FalseClass)
-    end
-
-    def self.quote_table(table)
-      ActiveRecord::Base.connection.quote_table_name(table)
-    end
   end
 
   class Dump < SerializationHelper::Dump
@@ -76,7 +42,7 @@ module YamlDb
       column_names = table_column_names(table)
 
       each_table_page(table) do |records|
-        rows = YamlDb::Utils.unhash_records(records, column_names)
+        rows = SerializationHelper::Utils.unhash_records(records, column_names)
         io.write(YamlDb::Utils.chunk_records(records))
       end
     end
@@ -89,21 +55,21 @@ module YamlDb
       total_count = table_record_count(table)
       pages = (total_count.to_f / records_per_page).ceil - 1
       id = table_column_names(table).first
-      boolean_columns = YamlDb::Utils.boolean_columns(table)
-      quoted_table_name = YamlDb::Utils.quote_table(table)
+      boolean_columns = SerializationHelper::Utils.boolean_columns(table)
+      quoted_table_name = SerializationHelper::Utils.quote_table(table)
 
       (0..pages).to_a.each do |page|
         sql = ActiveRecord::Base.connection.add_limit_offset!("SELECT * FROM #{quoted_table_name} ORDER BY #{id}",
                                                               :limit => records_per_page, :offset => records_per_page * page
         )
         records = ActiveRecord::Base.connection.select_all(sql)
-        records = YamlDb::Utils.convert_booleans(records, boolean_columns)
+        records = SerializationHelper::Utils.convert_booleans(records, boolean_columns)
         yield records
       end
     end
 
     def self.table_record_count(table)
-      ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{YamlDb::Utils.quote_table(table)}").values.first.to_i
+      ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{SerializationHelper::Utils.quote_table(table)}").values.first.to_i
     end
   end
 
@@ -121,9 +87,9 @@ module YamlDb
 
     def self.truncate_table(table)
       begin
-        ActiveRecord::Base.connection.execute("TRUNCATE #{YamlDb::Utils.quote_table(table)}")
+        ActiveRecord::Base.connection.execute("TRUNCATE #{SerializationHelper::Utils.quote_table(table)}")
       rescue Exception
-        ActiveRecord::Base.connection.execute("DELETE FROM #{YamlDb::Utils.quote_table(table)}")
+        ActiveRecord::Base.connection.execute("DELETE FROM #{SerializationHelper::Utils.quote_table(table)}")
       end
     end
 
@@ -136,7 +102,7 @@ module YamlDb
 
     def self.load_records(table, column_names, records)
       quoted_column_names = column_names.map { |column| ActiveRecord::Base.connection.quote_column_name(column) }.join(',')
-      quoted_table_name = YamlDb::Utils.quote_table(table)
+      quoted_table_name = SerializationHelper::Utils.quote_table(table)
       records.each do |record|
         ActiveRecord::Base.connection.execute("INSERT INTO #{quoted_table_name} (#{quoted_column_names}) VALUES (#{record.map { |r| ActiveRecord::Base.connection.quote(r) }.join(',')})")
       end
