@@ -81,10 +81,20 @@ class SerializationHelper
   end
 
   class Dump
+    def self.before_table(io,table)
+
+    end
+
     def self.dump(io)
       tables.each do |table|
+        before_table(io, table)
         dump_table(io, table)
+        after_table(io, table)        
       end
+    end
+
+    def self.after_table(io,table)
+
     end
 
     def self.tables

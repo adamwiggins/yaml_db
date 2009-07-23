@@ -30,13 +30,4 @@ describe SerializationHelper do
       end
 
     end
-
-    context "for multi-file loads" do
-      before do
-        
-      end
-
-
-    end
-
 end
