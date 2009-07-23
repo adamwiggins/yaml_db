@@ -16,18 +16,18 @@ namespace :db do
 
 		desc "Dump contents of database to db/data.yml"
 		task(:dump => :environment) do
-			YamlDb.dump db_dump_data_file
+			SerializationHelper.new(YamlDb::SerializationHelper).dump db_dump_data_file
 		end
 
 		desc "Dump contents of database to curr_dir_name/data.ym"
 		task(:dump_dir => :environment) do
             time_dir = dump_dir "/#{Time.now.to_s.gsub(/ /, '_')}"
-            YamlDb.dump_to_dir time_dir
+            SerializationHelper.new(YamlDb::SerializationHelper).dump_to_dir time_dir
 		end
 
 		desc "Load contents of db/data.yml into database"
 		task(:load => :environment) do
-			YamlDb.load db_dump_data_file
+			SerializationHelper.new(YamlDb::SerializationHelper).load db_dump_data_file
 		end
 	end
 end

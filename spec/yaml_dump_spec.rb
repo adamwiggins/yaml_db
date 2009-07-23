@@ -106,7 +106,7 @@ EOYAML
       end
 
       it "should create the number of files that there are tables" do
-         YamlDb.dump_to_dir "dir_name"
+         SerializationHelper.new(YamlDb::SerializationHelper).dump_to_dir "dir_name"
       end
 
     end
