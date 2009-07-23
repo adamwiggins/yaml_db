@@ -1,9 +1,10 @@
 require 'rubygems'
 require 'yaml'
 require 'active_record'
+require 'serialization_helper'
 
 module YamlDb
-  module SerializationHelper
+  module Helper
     def self.loader
       YamlDb::Load 
     end
@@ -62,24 +63,8 @@ module YamlDb
     end
   end
 
-  module Dump
-    def self.dump(io)
-      tables.each do |table|
-        dump_table(io, table)
-      end
-    end
-
-    def self.tables
-      ActiveRecord::Base.connection.tables.reject { |table| ['schema_info', 'schema_migrations'].include?(table) }
-    end
-
-    def self.dump_table(io, table)
-      return if table_record_count(table).zero?
-
-      dump_table_columns(io, table)
-      dump_table_records(io, table)
-    end
-
+  class Dump < SerializationHelper::Dump
+ 
     def self.dump_table_columns(io, table)
       io.write("\n")
       io.write({ table => { 'columns' => table_column_names(table) } }.to_yaml)
@@ -98,10 +83,6 @@ module YamlDb
 
     def self.table_record_header(io)
       io.write("  records: \n")
-    end
-
-    def self.table_column_names(table)
-      ActiveRecord::Base.connection.columns(table).map { |c| c.name }
     end
 
     def self.each_table_page(table, records_per_page=1000)
@@ -126,7 +107,7 @@ module YamlDb
     end
   end
 
-  module Load
+  class Load < SerializationHelper::Load
     def self.load(io)
       ActiveRecord::Base.connection.transaction do
         YAML.load_documents(io) do |ydoc|

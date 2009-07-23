@@ -12,9 +12,6 @@ describe YamlDb::Dump do
 		YamlDb::Utils.stub!(:quote_table).with('mytable').and_return('mytable')
 	end
 
-    context "for single file yaml dumps" do
-
-
 	before(:each) do   
 	  File.stub!(:new).with('dump.yml', 'w').and_return(StringIO.new)
 	  @io = StringIO.new
@@ -94,24 +91,6 @@ EOYAML
 		YamlDb::Dump.should_not_receive(:dump_table_records)
 		YamlDb::Dump.dump_table(@io, 'mytable')
     end
-
-    end
-
-    context "for multi-file yaml dumps" do
-      before do
-        @io = StringIO.new
-        File.should_receive(:new).once.with("dir_name/mytable.yml", "w").and_return(@io)
-        Dir.should_receive(:mkdir).once.with("dir_name")
-        YamlDb::Dump.should_receive(:dump_table).once.with(@io, "mytable")
-      end
-
-      it "should create the number of files that there are tables" do
-         SerializationHelper.new(YamlDb::SerializationHelper).dump_to_dir "dir_name"
-      end
-
-    end
-
-
 
 
 
