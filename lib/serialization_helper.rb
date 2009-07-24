@@ -1,44 +1,56 @@
-class SerializationHelper
-  attr_reader :extension
+module SerializationHelper
 
-  def initialize(helper)
-    @dumper = helper.dumper
-    @loader = helper.loader
-    @extension = helper.extension
-  end
+  class Base
+    attr_reader :extension
 
-  def dump(filename)
-    disable_logger
-    @dumper.dump(File.new(filename, "w"))
-    reenable_logger
-  end
+    def initialize(helper)
+      @dumper = helper.dumper
+      @loader = helper.loader
+      @extension = helper.extension
+    end
 
-  def dump_to_dir(dirname)
-    Dir.mkdir(dirname)
-    tables = @dumper.tables
-    tables.each do |table|
-      file = File.new "#{dirname}/#{table}.#{@extension}", "w"
-      @dumper.dump_table file, table
+    def dump(filename)
+      disable_logger
+      @dumper.dump(File.new(filename, "w"))
+      reenable_logger
+    end
+
+    def dump_to_dir(dirname)
+      Dir.mkdir(dirname)
+      tables = @dumper.tables
+      tables.each do |table|
+        file = File.new "#{dirname}/#{table}.#{@extension}", "w"
+        @dumper.dump_table file, table
+      end
+    end
+
+    def load(filename)
+      disable_logger
+      @loader.load(File.new(filename, "r"))
+      reenable_logger
+    end
+
+    def load_from_dir(dirname)
+      Dir.foreach(dirname) do |filename|
+        if filename == "." || filename == ".."
+          next
+        end
+        @loader.load(File.new("#{dirname}/#{filename}", "r"))       
+      end   
+    end
+
+    def disable_logger
+      @@old_logger = ActiveRecord::Base.logger
+      ActiveRecord::Base.logger = nil
+    end
+
+    def reenable_logger
+      ActiveRecord::Base.logger = @@old_logger
     end
   end
-
-  def load(filename)
-    disable_logger
-    @loader.load(File.new(filename, "r"))
-    reenable_logger
-  end
-
-  def disable_logger
-    @@old_logger = ActiveRecord::Base.logger
-    ActiveRecord::Base.logger = nil
-  end
-
-  def reenable_logger
-    ActiveRecord::Base.logger = @@old_logger
-  end
-
+  
   class Load
-    
+
   end
 
   module Utils
@@ -54,7 +66,7 @@ class SerializationHelper
 
       records
     end
-    
+
     def self.convert_booleans(records, columns)
       records.each do |record|
         columns.each do |column|
@@ -81,7 +93,7 @@ class SerializationHelper
   end
 
   class Dump
-    def self.before_table(io,table)
+    def self.before_table(io, table)
 
     end
 
@@ -89,11 +101,11 @@ class SerializationHelper
       tables.each do |table|
         before_table(io, table)
         dump_table(io, table)
-        after_table(io, table)        
+        after_table(io, table)
       end
     end
 
-    def self.after_table(io,table)
+    def self.after_table(io, table)
 
     end
 
@@ -132,7 +144,7 @@ class SerializationHelper
 
     def self.table_record_count(table)
       ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{SerializationHelper::Utils.quote_table(table)}").values.first.to_i
-    end    
+    end
 
   end
 
