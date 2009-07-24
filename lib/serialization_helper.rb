@@ -32,10 +32,10 @@ module SerializationHelper
 
     def load_from_dir(dirname, truncate = true)
       Dir.entries(dirname).each do |filename|
-        if filename == "." || filename == ".."
+        if filename =~ /^[.]/
           next
         end
-        @loader.load(File.new("#{dirname}/#{filename}", "r"), truncate)       
+        @loader.load(File.new("#{dirname}/#{filename}", "r"), truncate)
       end   
     end
 
