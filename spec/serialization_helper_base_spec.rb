@@ -37,8 +37,8 @@ describe SerializationHelper::Base do
 
       before do
         stub_helper!
-        @loader.should_receive(:load).once.with(@io)
-        File.should_receive(:new).once.with("mytable.yml", "r").and_return(@io)
+        @loader.should_receive(:load).once.with(@io, true)
+        File.should_receive(:new).once.with("dir_name/mytable.yml", "r").and_return(@io)
         Dir.stub!(:entries).and_return(["mytable.yml"])
       end
 

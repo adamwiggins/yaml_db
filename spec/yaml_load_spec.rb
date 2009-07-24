@@ -63,8 +63,8 @@ describe YamlDb::Load do
 		YAML.should_receive(:load_documents).with(@io).and_yield({ 'mytable' => { 
 					'columns' => [ 'a', 'b' ], 
 					'records' => [[1, 2], [3, 4]] 
-				} })
-		YamlDb::Load.should_receive(:load_table).with('mytable', { 'columns' => [ 'a', 'b' ], 'records' => [[1, 2], [3, 4]] })
+				} } )
+		YamlDb::Load.should_receive(:load_table).with('mytable', { 'columns' => [ 'a', 'b' ], 'records' => [[1, 2], [3, 4]] },true)
 		YamlDb::Load.load(@io)
 	end
 

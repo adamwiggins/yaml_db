@@ -24,18 +24,18 @@ module SerializationHelper
       end
     end
 
-    def load(filename)
+    def load(filename, truncate = true)
       disable_logger
-      @loader.load(File.new(filename, "r"))
+      @loader.load(File.new(filename, "r"), truncate)
       reenable_logger
     end
 
-    def load_from_dir(dirname)
-      Dir.foreach(dirname) do |filename|
+    def load_from_dir(dirname, truncate = true)
+      Dir.entries(dirname).each do |filename|
         if filename == "." || filename == ".."
           next
         end
-        @loader.load(File.new("#{dirname}/#{filename}", "r"))       
+        @loader.load(File.new("#{dirname}/#{filename}", "r"), truncate)       
       end   
     end
 
