@@ -57,8 +57,6 @@ module YamlDb
     def self.load_documents(io, truncate = true) 
         YAML.load_documents(io) do |ydoc|
           ydoc.keys.each do |table_name|
-            puts table_name
-            puts ydoc[table_name].inspect
             next if ydoc[table_name].nil?
             load_table(table_name, ydoc[table_name], truncate)
           end
