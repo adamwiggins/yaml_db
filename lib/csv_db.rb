@@ -1,3 +1,4 @@
+#require 'FasterCSV'
 module CsvDb
   module Helper
     def self.loader
@@ -14,13 +15,34 @@ module CsvDb
   end
 
   class Load < SerializationHelper::Load
+    def self.load_documents(io, truncate = true)
+      puts io.to_s
+      tables = {}
+      curr_table = nil
+      io.each do |line|
+        if /BEGIN_CSV_TABLE_DECLARATION(.+)END_CSV_TABLE_DECLARATION/ =~ line
+          curr_table = $1
+          tables[curr_table] = {}
+        else
+          if tables[curr_table]["columns"]
+            tables[curr_table]["records"] << FasterCSV.parse(line)[0]
+          else
+            tables[curr_table]["columns"] = FasterCSV.parse(line)[0]
+            tables[curr_table]["records"] = []
+          end
+        end
+      end
 
+      tables.each_pair do |table_name, contents|
+        load_table(table_name, contents, truncate)
+      end
+    end
   end
 
   class Dump < SerializationHelper::Dump
 
     def self.before_table(io,table)
-      io.write "#{table}:"
+      io.write "BEGIN_CSV_TABLE_DECLARATION#{table}END_CSV_TABLE_DECLARATION\n"
     end
 
     def self.dump(io)
