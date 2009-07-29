@@ -16,7 +16,6 @@ module CsvDb
 
   class Load < SerializationHelper::Load
     def self.load_documents(io, truncate = true)
-      puts io.to_s
       tables = {}
       curr_table = nil
       io.each do |line|
