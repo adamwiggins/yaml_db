@@ -54,46 +54,13 @@ module YamlDb
   end
 
   class Load < SerializationHelper::Load
-    def self.load(io, truncate = true)
-      ActiveRecord::Base.connection.transaction do
+    def self.load_documents(io, truncate = true) 
         YAML.load_documents(io) do |ydoc|
           ydoc.keys.each do |table_name|
             next if ydoc[table_name].nil?
             load_table(table_name, ydoc[table_name], truncate)
           end
         end
-      end
-    end
-
-    def self.truncate_table(table)
-      begin
-        ActiveRecord::Base.connection.execute("TRUNCATE #{SerializationHelper::Utils.quote_table(table)}")
-      rescue Exception
-        ActiveRecord::Base.connection.execute("DELETE FROM #{SerializationHelper::Utils.quote_table(table)}")
-      end
-    end
-
-    def self.load_table(table, data, truncate = true) 
-      column_names = data['columns']
-      if truncate
-        truncate_table(table)
-      end
-      load_records(table, column_names, data['records'])
-      reset_pk_sequence!(table)
-    end
-
-    def self.load_records(table, column_names, records)
-      quoted_column_names = column_names.map { |column| ActiveRecord::Base.connection.quote_column_name(column) }.join(',')
-      quoted_table_name = SerializationHelper::Utils.quote_table(table)
-      records.each do |record|
-        ActiveRecord::Base.connection.execute("INSERT INTO #{quoted_table_name} (#{quoted_column_names}) VALUES (#{record.map { |r| ActiveRecord::Base.connection.quote(r) }.join(',')})")
-      end
-    end
-
-    def self.reset_pk_sequence!(table_name)
-      if ActiveRecord::Base.connection.respond_to?(:reset_pk_sequence!)
-        ActiveRecord::Base.connection.reset_pk_sequence!(table_name)
-      end
     end
   end
 
