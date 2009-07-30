@@ -76,6 +76,9 @@ module SerializationHelper
     end
 
     def self.load_records(table, column_names, records)
+      if column_names.nil?
+        return
+      end
       quoted_column_names = column_names.map { |column| ActiveRecord::Base.connection.quote_column_name(column) }.join(',')
       quoted_table_name = SerializationHelper::Utils.quote_table(table)
       records.each do |record|
