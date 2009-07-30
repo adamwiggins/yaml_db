@@ -17,6 +17,8 @@ describe SerializationHelper::Base do
         @helper.stub!(:loader).and_return(@loader)
         @helper.stub!(:extension).and_return("yml")
         @dumper.stub!(:tables).and_return([ActiveRecord::Base.connection.tables[0]])
+        @dumper.stub!(:before_table).and_return(nil)
+        @dumper.stub!(:after_table).and_return(nil)
     end
 
     context "for multi-file dumps" do
