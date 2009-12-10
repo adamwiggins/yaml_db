@@ -36,12 +36,15 @@ describe SerializationHelper::Load do
 	end
 
     it "should insert records into a table" do
+        mca = mock('a',:name => 'a')
+        mcb = mock('b', :name => 'b')
+        ActiveRecord::Base.connection.stub!(:columns).with('mytable').and_return([mca , mcb ])
         ActiveRecord::Base.connection.stub!(:quote_column_name).with('a').and_return('a')
         ActiveRecord::Base.connection.stub!(:quote_column_name).with('b').and_return('b')
-        ActiveRecord::Base.connection.stub!(:quote).with(1).and_return("'1'")
-        ActiveRecord::Base.connection.stub!(:quote).with(2).and_return("'2'")
-        ActiveRecord::Base.connection.stub!(:quote).with(3).and_return("'3'")
-        ActiveRecord::Base.connection.stub!(:quote).with(4).and_return("'4'")
+        ActiveRecord::Base.connection.stub!(:quote).with(1, mca).and_return("'1'")
+        ActiveRecord::Base.connection.stub!(:quote).with(2, mcb).and_return("'2'")
+        ActiveRecord::Base.connection.stub!(:quote).with(3, mca).and_return("'3'")
+        ActiveRecord::Base.connection.stub!(:quote).with(4, mcb).and_return("'4'")
         ActiveRecord::Base.connection.should_receive(:execute).with("INSERT INTO mytable (a,b) VALUES ('1','2')")
         ActiveRecord::Base.connection.should_receive(:execute).with("INSERT INTO mytable (a,b) VALUES ('3','4')")
 
@@ -49,12 +52,15 @@ describe SerializationHelper::Load do
     end
 
     it "should quote column names that correspond to sql keywords" do
+        mca = mock('a',:name => 'a')
+        mccount = mock('count', :name => 'count')
+        ActiveRecord::Base.connection.stub!(:columns).with('mytable').and_return([mca , mccount ])
         ActiveRecord::Base.connection.stub!(:quote_column_name).with('a').and_return('a')
         ActiveRecord::Base.connection.stub!(:quote_column_name).with('count').and_return('"count"')
-        ActiveRecord::Base.connection.stub!(:quote).with(1).and_return("'1'")
-        ActiveRecord::Base.connection.stub!(:quote).with(2).and_return("'2'")
-        ActiveRecord::Base.connection.stub!(:quote).with(3).and_return("'3'")
-        ActiveRecord::Base.connection.stub!(:quote).with(4).and_return("'4'")
+        ActiveRecord::Base.connection.stub!(:quote).with(1, mca).and_return("'1'")
+        ActiveRecord::Base.connection.stub!(:quote).with(2, mccount).and_return("'2'")
+        ActiveRecord::Base.connection.stub!(:quote).with(3, mca).and_return("'3'")
+        ActiveRecord::Base.connection.stub!(:quote).with(4, mccount).and_return("'4'")
         ActiveRecord::Base.connection.should_receive(:execute).with("INSERT INTO mytable (a,\"count\") VALUES ('1','2')")
         ActiveRecord::Base.connection.should_receive(:execute).with("INSERT INTO mytable (a,\"count\") VALUES ('3','4')")
 
