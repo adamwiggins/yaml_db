@@ -1,3 +1,8 @@
+
+This repo is no longer maintained, please see http://github.com/ludicast/yaml_db for a currently maintained fork.
+
+------------------------------------------------------------------------------
+
 = YamlDb
 
 YamlDb is a database-independent format for dumping and restoring data.  It complements the the database-independent schema format found in db/schema.rb.  The data is saved into db/data.yml.
