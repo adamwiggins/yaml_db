@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/base'
 describe SerializationHelper::Dump do
 
 	before do
-		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
+		silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
 		ActiveRecord::Base.connection = mock('connection')
 		ActiveRecord::Base.connection.stub!(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
 		ActiveRecord::Base.connection.stub!(:columns).with('mytable').and_return([ mock('a',:name => 'a'), mock('b', :name => 'b') ])

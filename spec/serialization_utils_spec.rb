@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/base'
 
 describe SerializationHelper::Utils, " convert records utility method" do
 	before do
-		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
+		silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
 		ActiveRecord::Base.connection = mock('connection')
 	end
 

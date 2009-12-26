@@ -4,7 +4,7 @@ describe SerializationHelper::Base do
 
 	before do
         @io = StringIO.new
-		ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true)
+		silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
 		ActiveRecord::Base.connection = mock('connection')
 		ActiveRecord::Base.connection.stub!(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
     end
