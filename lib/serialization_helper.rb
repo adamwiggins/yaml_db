@@ -120,7 +120,7 @@ module SerializationHelper
     end
 
     def self.boolean_columns(table)
-      columns = ActiveRecord::Base.connection.columns(table).reject { |c| c.type != :boolean }
+      columns = ActiveRecord::Base.connection.columns(table).reject { |c| silence_warnings { c.type != :boolean } }
       columns.map { |c| c.name }
     end
 
