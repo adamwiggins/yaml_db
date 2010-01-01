@@ -1,4 +1,4 @@
-= YamlDb
+# YamlDb
 
 YamlDb is a database-independent format for dumping and restoring data.  It complements the the database-independent schema format found in db/schema.rb.  The data is saved into db/data.yml.
 
@@ -6,13 +6,13 @@ This can be used as a replacement for mysqldump or pg_dump, but only for the dat
 
 Any database that has an ActiveRecord adapter should work.
 
-== Installation
+## Installation
 
 This plugin can now be installed as a gem via 
 
     gem install yaml_db
 
-== Usage
+## Usage
 
     rake db:data:dump   ->   Dump contents of Rails database to db/data.yml
     rake db:data:load   ->   Load contents of db/data.yml into the database
@@ -24,7 +24,7 @@ Further, there are tasks db:dump and db:load which do the entire database (the e
 
 In addition, we have plugins whereby you can export your database to/from various formats.  We only deal with yaml and csv right now, but you can easily write tools for your own formats (such as Excel or XML).  To use another format, just load setting the "class"  parameter to the class you are using.  This defaults to "YamlDb::Helper" which is a refactoring of the old yaml_db code.  We'll shorten this to use class nicknames in a little bit.
 
-== Examples
+## Examples
 
 One common use would be to switch your data from one database backend to another.  For example, let's say you wanted to switch from SQLite to MySQL.  You might execute the following steps:
 
@@ -36,7 +36,7 @@ One common use would be to switch your data from one database backend to another
 
 4. rake db:load
 
-== Credits
+## Credits
 
 Created by Orion Henry and Adam Wiggins.  Major updates by Ricardo Chimal, Jr.
 
