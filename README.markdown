@@ -12,6 +12,8 @@ This plugin can now be installed as a gem via
 
     gem install yaml_db
 
+Note that when doing this, the rake tasks won't automatically be available to your app.  You'll have to explicitly include them via the approaches followed: [here](http://ggr.com/how-to-include-a-gems-rake-tasks-in-your-rails-app.html), [here](https://rails.lighthouseapp.com/projects/8994/tickets/510-rake-tasks-not-included-for-gems), [and here](https://rails.lighthouseapp.com/projects/8994/tickets/59)
+
 ## Usage
 
     rake db:data:dump   ->   Dump contents of Rails database to db/data.yml
