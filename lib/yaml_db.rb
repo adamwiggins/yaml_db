@@ -2,6 +2,7 @@ require 'rubygems'
 require 'yaml'
 require 'active_record'
 require 'serialization_helper'
+require 'active_support/core_ext/kernel/reporting'
 
 module YamlDb
   module Helper

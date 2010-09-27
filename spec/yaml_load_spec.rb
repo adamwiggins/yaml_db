@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/base'
+require 'active_support/core_ext/kernel/debugger'
 
 describe YamlDb::Load do
 	before do
