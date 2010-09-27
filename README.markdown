@@ -4,7 +4,7 @@ YamlDb is a database-independent format for dumping and restoring data.  It comp
 
 This can be used as a replacement for mysqldump or pg_dump, but only for the databases typically used by Rails apps.  Users, permissions, schemas, triggers, and other advanced database features are not supported - by design.
 
-Any database that has an ActiveRecord adapter should work.
+Any database that has an ActiveRecord adapter should work.  This gem is now Rails 3 only.  For Rails 2, clone and checkout the Rails2 branch.
 
 ## Installation
 
