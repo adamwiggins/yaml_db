@@ -115,10 +115,14 @@ module SerializationHelper
       records.each do |record|
         columns.each do |column|
           next if is_boolean(record[column])
-          record[column] = (record[column] == 't' or record[column] == '1')
+          record[column] = convert_boolean(record[column])
         end
       end
       records
+    end
+
+    def self.convert_boolean(value)
+      ['t', '1', true, 1].include?(value)
     end
 
     def self.boolean_columns(table)

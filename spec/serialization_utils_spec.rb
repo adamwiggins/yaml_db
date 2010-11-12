@@ -28,4 +28,24 @@ describe SerializationHelper::Utils, " convert records utility method" do
 		ActiveRecord::Base.connection.should_receive(:quote_table_name).with('values').and_return('`values`')
 		SerializationHelper::Utils.quote_table('values').should == '`values`'
 	end
+
+  it "should convert ruby booleans to true and false" do
+		SerializationHelper::Utils.convert_boolean(true).should == true
+		SerializationHelper::Utils.convert_boolean(false).should == false
+  end
+
+  it "should convert ruby string t and f to true and false" do
+		SerializationHelper::Utils.convert_boolean('t').should == true
+		SerializationHelper::Utils.convert_boolean('f').should == false
+  end
+
+  it "should convert ruby string 1 and 0 to true and false" do
+		SerializationHelper::Utils.convert_boolean('1').should == true
+		SerializationHelper::Utils.convert_boolean('0').should == false
+  end
+
+  it "should convert ruby integer 1 and 0 to true and false" do
+		SerializationHelper::Utils.convert_boolean(1).should == true
+		SerializationHelper::Utils.convert_boolean(0).should == false
+  end
 end
