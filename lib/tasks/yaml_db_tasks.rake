@@ -11,7 +11,7 @@ namespace :db do
         end
             
         def dump_dir(dir = "")
-          "#{RAILS_ROOT}/db#{dir}"
+          "#{Rails.root}/db#{dir}"
         end
 
 		desc "Dump contents of database to db/data.extension (defaults to yaml)"
