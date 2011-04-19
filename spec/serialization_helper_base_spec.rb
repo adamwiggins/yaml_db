@@ -1,13 +1,16 @@
 require File.dirname(__FILE__) + '/base'
 
 describe SerializationHelper::Base do
+  def prestub_active_record
+
+  end
 
 	before do
-        @io = StringIO.new
-		silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
-		ActiveRecord::Base.connection = mock('connection')
+    @io = StringIO.new
+  	silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
+  	ActiveRecord::Base.stub(:connection).and_return(mock('connection'))
 		ActiveRecord::Base.connection.stub!(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
-    end
+  end
 
     def stub_helper!
         @helper = mock("MyHelper")

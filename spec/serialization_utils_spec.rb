@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/base'
 describe SerializationHelper::Utils, " convert records utility method" do
 	before do
 		silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
-		ActiveRecord::Base.connection = mock('connection')
+		ActiveRecord::Base.stub(:connection).and_return(stub('connection').as_null_object)
 	end
 
 	it "returns an array of hash values using an array of ordered keys" do

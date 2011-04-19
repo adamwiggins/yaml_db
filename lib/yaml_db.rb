@@ -3,6 +3,7 @@ require 'yaml'
 require 'active_record'
 require 'serialization_helper'
 require 'active_support/core_ext/kernel/reporting'
+require 'rails/railtie'
 
 module YamlDb
   module Helper

@@ -5,7 +5,7 @@ describe SerializationHelper::Load do
 		SerializationHelper::Utils.stub!(:quote_table).with('mytable').and_return('mytable')
 
 		silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
-		ActiveRecord::Base.connection = mock('connection')
+		ActiveRecord::Base.stub(:connection).and_return(stub('connection').as_null_object)
 		ActiveRecord::Base.connection.stub!(:transaction).and_yield
 		@io = StringIO.new
 	end
