@@ -32,7 +32,7 @@ namespace :db do
     task :load => :environment do
       format_class = ENV['class'] || "YamlDb::Helper"
       helper = format_class.constantize
-      SerializationHelper::Base.new(helper).load (db_dump_data_file helper.extension)
+      SerializationHelper::Base.new(helper).load(db_dump_data_file helper.extension)
     end
 
     desc "Load contents of db/data_dir into database"
