@@ -8,7 +8,7 @@ require 'rails/railtie'
 module YamlDb
   module Helper
     def self.loader
-      YamlDb::Load 
+      YamlDb::Load
     end
 
     def self.dumper
@@ -24,7 +24,7 @@ module YamlDb
   module Utils
     def self.chunk_records(records)
       yaml = [ records ].to_yaml
-      yaml.sub!("---\n", "")
+      yaml.sub!(/---\s\n|---\n/, '')
       yaml.sub!('- - -', '  - -')
       yaml
     end
@@ -32,7 +32,7 @@ module YamlDb
   end
 
   class Dump < SerializationHelper::Dump
- 
+
     def self.dump_table_columns(io, table)
       io.write("\n")
       io.write({ table => { 'columns' => table_column_names(table) } }.to_yaml)
@@ -56,7 +56,7 @@ module YamlDb
   end
 
   class Load < SerializationHelper::Load
-    def self.load_documents(io, truncate = true) 
+    def self.load_documents(io, truncate = true)
         YAML.load_documents(io) do |ydoc|
           ydoc.keys.each do |table_name|
             next if ydoc[table_name].nil?
@@ -68,7 +68,7 @@ module YamlDb
 
   class Railtie < Rails::Railtie
     rake_tasks do
-      load File.expand_path('../tasks/yaml_db_tasks.rake', 
+      load File.expand_path('../tasks/yaml_db_tasks.rake',
 __FILE__)
     end
   end
