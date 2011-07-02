@@ -24,7 +24,7 @@ module YamlDb
   module Utils
     def self.chunk_records(records)
       yaml = [ records ].to_yaml
-      yaml.sub!("--- \n", "")
+      yaml.sub!("---\n", "")
       yaml.sub!('- - -', '  - -')
       yaml
     end
