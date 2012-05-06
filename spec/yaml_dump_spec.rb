@@ -25,6 +25,10 @@ describe YamlDb::Dump do
 
 
 	it "should return a yaml string that contains a table header and column names" do
+    if RUBY_VERSION.split(".")[1] == "9"
+
+	  	YAML::ENGINE.yamler = "syck"
+		end
 		YamlDb::Dump.stub!(:table_column_names).with('mytable').and_return([ 'a', 'b' ])
 		YamlDb::Dump.dump_table_columns(@io, 'mytable')
 		@io.rewind
