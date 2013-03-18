@@ -4,8 +4,8 @@ module SerializationHelper
     attr_reader :extension
 
     def initialize(helper)
-      @dumper = helper.dumper
-      @loader = helper.loader
+      @dumper    = helper.dumper
+      @loader    = helper.loader
       @extension = helper.extension
     end
 
@@ -22,7 +22,7 @@ module SerializationHelper
         io = File.new "#{dirname}/#{table}.#{@extension}", "w"
         @dumper.before_table(io, table)
         @dumper.dump_table io, table
-        @dumper.after_table(io, table)         
+        @dumper.after_table(io, table)
       end
     end
 
@@ -38,7 +38,7 @@ module SerializationHelper
           next
         end
         @loader.load(File.new("#{dirname}/#{filename}", "r"), truncate)
-      end   
+      end
     end
 
     def disable_logger
@@ -50,7 +50,7 @@ module SerializationHelper
       ActiveRecord::Base.logger = @@old_logger
     end
   end
-  
+
   class Load
     def self.load(io, truncate = true)
       ActiveRecord::Base.connection.transaction do
@@ -92,9 +92,8 @@ module SerializationHelper
       if ActiveRecord::Base.connection.respond_to?(:reset_pk_sequence!)
         ActiveRecord::Base.connection.reset_pk_sequence!(table_name)
       end
-    end    
+    end
 
-      
   end
 
   module Utils
