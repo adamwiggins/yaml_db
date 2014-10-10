@@ -24,13 +24,21 @@ describe YamlDb::Dump do
   end
 
   it "should return a yaml string that contains a table header and column names" do
-    if RUBY_VERSION.split(".")[1] == "9"
-      YAML::ENGINE.yamler = "syck"
-    end
     allow(YamlDb::Dump).to receive(:table_column_names).with('mytable').and_return([ 'a', 'b' ])
     YamlDb::Dump.dump_table_columns(@io, 'mytable')
     @io.rewind
-    expect(@io.read).to eq(<<EOYAML
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('1.9.3')
+      expect(@io.read).to eq(<<EOYAML
+
+---
+mytable:
+  columns:
+  - a
+  - b
+EOYAML
+      )
+    else
+      expect(@io.read).to eq(<<EOYAML
 
 --- 
 mytable: 
@@ -38,7 +46,8 @@ mytable:
   - a
   - b
 EOYAML
-    )
+      )
+    end
   end
 
   it "should return dump the records for a table in yaml to a given io stream" do
