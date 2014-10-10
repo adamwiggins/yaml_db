@@ -3,51 +3,51 @@ require File.dirname(__FILE__) + '/base'
 describe SerializationHelper::Utils, " convert records utility method" do
 
   before do
-    silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
-    ActiveRecord::Base.stub(:connection).and_return(stub('connection').as_null_object)
+    silence_warnings { ActiveRecord::Base = double('ActiveRecord::Base').as_null_object }
+    allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection').as_null_object)
   end
 
   it "returns an array of hash values using an array of ordered keys" do
-    SerializationHelper::Utils.unhash({ 'a' => 1, 'b' => 2 }, [ 'b', 'a' ]).should == [ 2, 1 ]
+    expect(SerializationHelper::Utils.unhash({ 'a' => 1, 'b' => 2 }, [ 'b', 'a' ])).to eq([ 2, 1 ])
   end
 
   it "should unhash each hash an array using an array of ordered keys" do
-    SerializationHelper::Utils.unhash_records([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ], [ 'b', 'a' ]).should == [ [ 2, 1 ], [ 4, 3 ] ]
+    expect(SerializationHelper::Utils.unhash_records([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ], [ 'b', 'a' ])).to eq([ [ 2, 1 ], [ 4, 3 ] ])
   end
 
   it "should return true if it is a boolean type" do
-    SerializationHelper::Utils.is_boolean(true).should == true
-    SerializationHelper::Utils.is_boolean('true').should_not == true
+    expect(SerializationHelper::Utils.is_boolean(true)).to be true
+    expect(SerializationHelper::Utils.is_boolean('true')).to be false
   end
 
   it "should return an array of boolean columns" do
-    ActiveRecord::Base.connection.stub!(:columns).with('mytable').and_return([ mock('a',:name => 'a',:type => :string), mock('b', :name => 'b',:type => :boolean) ])
-    SerializationHelper::Utils.boolean_columns('mytable').should == ['b']
+    allow(ActiveRecord::Base.connection).to receive(:columns).with('mytable').and_return([ double('a',:name => 'a',:type => :string), double('b', :name => 'b',:type => :boolean) ])
+    expect(SerializationHelper::Utils.boolean_columns('mytable')).to eq(['b'])
   end
 
   it "should quote the table name" do
-    ActiveRecord::Base.connection.should_receive(:quote_table_name).with('values').and_return('`values`')
-    SerializationHelper::Utils.quote_table('values').should == '`values`'
+    expect(ActiveRecord::Base.connection).to receive(:quote_table_name).with('values').and_return('`values`')
+    expect(SerializationHelper::Utils.quote_table('values')).to eq('`values`')
   end
 
   it "should convert ruby booleans to true and false" do
-    SerializationHelper::Utils.convert_boolean(true).should == true
-    SerializationHelper::Utils.convert_boolean(false).should == false
+    expect(SerializationHelper::Utils.convert_boolean(true)).to be true
+    expect(SerializationHelper::Utils.convert_boolean(false)).to be false
   end
 
   it "should convert ruby string t and f to true and false" do
-    SerializationHelper::Utils.convert_boolean('t').should == true
-    SerializationHelper::Utils.convert_boolean('f').should == false
+    expect(SerializationHelper::Utils.convert_boolean('t')).to be true
+    expect(SerializationHelper::Utils.convert_boolean('f')).to be false
   end
 
   it "should convert ruby string 1 and 0 to true and false" do
-    SerializationHelper::Utils.convert_boolean('1').should == true
-    SerializationHelper::Utils.convert_boolean('0').should == false
+    expect(SerializationHelper::Utils.convert_boolean('1')).to be true
+    expect(SerializationHelper::Utils.convert_boolean('0')).to be false
   end
 
   it "should convert ruby integer 1 and 0 to true and false" do
-    SerializationHelper::Utils.convert_boolean(1).should == true
-    SerializationHelper::Utils.convert_boolean(0).should == false
+    expect(SerializationHelper::Utils.convert_boolean(1)).to be true
+    expect(SerializationHelper::Utils.convert_boolean(0)).to be false
   end
 
 end

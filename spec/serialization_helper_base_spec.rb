@@ -6,29 +6,29 @@ describe SerializationHelper::Base do
 
   before do
     @io = StringIO.new
-    silence_warnings { ActiveRecord::Base = mock('ActiveRecord::Base', :null_object => true) }
-    ActiveRecord::Base.stub(:connection).and_return(mock('connection'))
-    ActiveRecord::Base.connection.stub!(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
+    silence_warnings { ActiveRecord::Base = double('ActiveRecord::Base').as_null_object }
+    allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection'))
+    allow(ActiveRecord::Base.connection).to receive(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
   end
 
   def stub_helper!
-    @helper = mock("MyHelper")
-    @dumper = mock("MyDumper");
-    @loader = mock("MyLoader");
-    @helper.stub!(:dumper).and_return(@dumper)
-    @helper.stub!(:loader).and_return(@loader)
-    @helper.stub!(:extension).and_return("yml")
-    @dumper.stub!(:tables).and_return([ActiveRecord::Base.connection.tables[0]])
-    @dumper.stub!(:before_table).and_return(nil)
-    @dumper.stub!(:after_table).and_return(nil)
+    @helper = double("MyHelper")
+    @dumper = double("MyDumper");
+    @loader = double("MyLoader");
+    allow(@helper).to receive(:dumper).and_return(@dumper)
+    allow(@helper).to receive(:loader).and_return(@loader)
+    allow(@helper).to receive(:extension).and_return("yml")
+    allow(@dumper).to receive(:tables).and_return([ActiveRecord::Base.connection.tables[0]])
+    allow(@dumper).to receive(:before_table).and_return(nil)
+    allow(@dumper).to receive(:after_table).and_return(nil)
   end
 
   context "for multi-file dumps" do
     before do
-      File.should_receive(:new).once.with("dir_name/mytable.yml", "w").and_return(@io)
-      Dir.should_receive(:mkdir).once.with("dir_name")
+      expect(File).to receive(:new).once.with("dir_name/mytable.yml", "w").and_return(@io)
+      expect(Dir).to receive(:mkdir).once.with("dir_name")
       stub_helper!
-      @dumper.should_receive(:dump_table).once.with(@io, "mytable")
+      expect(@dumper).to receive(:dump_table).once.with(@io, "mytable")
     end
 
     it "should create the number of files that there are tables" do
@@ -40,9 +40,9 @@ describe SerializationHelper::Base do
   context "for multi-file loads" do
     before do
       stub_helper!
-      @loader.should_receive(:load).once.with(@io, true)
-      File.should_receive(:new).once.with("dir_name/mytable.yml", "r").and_return(@io)
-      Dir.stub!(:entries).and_return(["mytable.yml"])
+      expect(@loader).to receive(:load).once.with(@io, true)
+      expect(File).to receive(:new).once.with("dir_name/mytable.yml", "r").and_return(@io)
+      allow(Dir).to receive(:entries).and_return(["mytable.yml"])
     end
 
     it "should insert into then umber of tables that there are files" do
