@@ -1,5 +1,3 @@
-source "http://rubygems.org"
-gem "rspec"
-gem "rake"
-gem "jeweler"
-gem "rails"
+source 'https://rubygems.org'
+
+gemspec
