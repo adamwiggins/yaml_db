@@ -3,7 +3,6 @@ require File.dirname(__FILE__) + '/base'
 describe SerializationHelper::Utils, " convert records utility method" do
 
   before do
-    silence_warnings { ActiveRecord::Base = double('ActiveRecord::Base').as_null_object }
     allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection').as_null_object)
   end
 

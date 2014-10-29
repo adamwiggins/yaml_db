@@ -6,7 +6,6 @@ describe SerializationHelper::Base do
 
   before do
     @io = StringIO.new
-    silence_warnings { ActiveRecord::Base = double('ActiveRecord::Base').as_null_object }
     allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection'))
     allow(ActiveRecord::Base.connection).to receive(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
   end

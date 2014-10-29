@@ -6,7 +6,6 @@ describe YamlDb::Load do
   before do
     allow(SerializationHelper::Utils).to receive(:quote_table).with('mytable').and_return('mytable')
 
-    silence_warnings { ActiveRecord::Base = double('ActiveRecord::Base').as_null_object }
     allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection').as_null_object)
     allow(ActiveRecord::Base.connection).to receive(:transaction).and_yield
   end

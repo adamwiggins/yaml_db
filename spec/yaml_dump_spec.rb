@@ -3,7 +3,6 @@ require File.dirname(__FILE__) + '/base'
 describe YamlDb::Dump do
 
   before do
-    silence_warnings { ActiveRecord::Base = double('ActiveRecord::Base').as_null_object }
     allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection').as_null_object)
     allow(ActiveRecord::Base.connection).to receive(:tables).and_return([ 'mytable', 'schema_info', 'schema_migrations' ])
     allow(ActiveRecord::Base.connection).to receive(:columns).with('mytable').and_return([ double('a',:name => 'a', :type => :string), double('b', :name => 'b', :type => :string) ])
