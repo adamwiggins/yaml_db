@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/base'
-
 describe SerializationHelper::Load do
 
   before do

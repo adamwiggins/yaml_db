@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/base'
-
 describe YamlDb::Utils, " convert records utility method" do
 
   it "turns an array with one record into a yaml chunk" do

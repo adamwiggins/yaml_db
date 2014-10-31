@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/base'
-
 describe YamlDb::Dump do
 
   before do

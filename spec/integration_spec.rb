@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/base'
 require 'active_record/railtie'
 
 # connect to in-memory SQLite database

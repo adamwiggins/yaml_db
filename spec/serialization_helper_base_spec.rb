@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/base'
-
 describe SerializationHelper::Base do
   def prestub_active_record
   end

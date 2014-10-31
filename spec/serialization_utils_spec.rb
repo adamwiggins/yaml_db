@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/base'
-
 describe SerializationHelper::Utils, " convert records utility method" do
 
   before do
