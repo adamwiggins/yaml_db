@@ -1,4 +1,4 @@
-describe YamlDb::Utils, " convert records utility method" do
+RSpec.describe YamlDb::Utils, " convert records utility method" do
 
   it "turns an array with one record into a yaml chunk" do
     expect(YamlDb::Utils.chunk_records([ %w(a b) ])).to eq(<<EOYAML

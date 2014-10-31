@@ -1,4 +1,4 @@
-describe SerializationHelper::Load do
+RSpec.describe SerializationHelper::Load do
 
   before do
     allow(SerializationHelper::Utils).to receive(:quote_table).with('mytable').and_return('mytable')

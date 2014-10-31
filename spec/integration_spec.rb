@@ -26,7 +26,7 @@ User.create([
 ])
 
 
-describe "with real ActiveRecord," do
+RSpec.describe "with real ActiveRecord," do
 
   it "contains two users" do
     expect(User.count).to eq(2)

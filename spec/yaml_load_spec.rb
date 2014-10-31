@@ -1,6 +1,6 @@
 require 'active_support/core_ext/kernel/debugger'
 
-describe YamlDb::Load do
+RSpec.describe YamlDb::Load do
 
   before do
     allow(SerializationHelper::Utils).to receive(:quote_table).with('mytable').and_return('mytable')

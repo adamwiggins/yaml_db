@@ -1,4 +1,4 @@
-describe SerializationHelper::Base do
+RSpec.describe SerializationHelper::Base do
   def prestub_active_record
   end
 

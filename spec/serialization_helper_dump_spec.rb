@@ -1,4 +1,4 @@
-describe SerializationHelper::Dump do
+RSpec.describe SerializationHelper::Dump do
 
   before do
     allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection').as_null_object)

@@ -1,4 +1,4 @@
-describe SerializationHelper::Utils, " convert records utility method" do
+RSpec.describe SerializationHelper::Utils, " convert records utility method" do
 
   before do
     allow(ActiveRecord::Base).to receive(:connection).and_return(double('connection').as_null_object)
