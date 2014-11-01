@@ -1,5 +1,9 @@
 # YamlDb
 
+## New Repository
+
+This repo is no longer maintained.  Community-supported repo at http://github.com/yamldb/yamldb.
+
 YamlDb is a database-independent format for dumping and restoring data.  It complements the the database-independent schema format found in db/schema.rb.  The data is saved into db/data.yml.
 
 This can be used as a replacement for mysqldump or pg_dump, but only for the databases typically used by Rails apps.  Users, permissions, schemas, triggers, and other advanced database features are not supported - by design.
