@@ -45,6 +45,3 @@ One common use would be to switch your data from one database backend to another
 Created by Orion Henry and Adam Wiggins.  Major updates by Ricardo Chimal, Jr.
 
 Patches contributed by Michael Irwin, Tom Locke, and Tim Galeckas.
-
-Send questions, feedback, or patches to the Heroku mailing list: http://groups.google.com/group/heroku
-
