@@ -44,6 +44,4 @@ One common use would be to switch your data from one database backend to another
 
 ## Credits
 
-Created by Orion Henry and Adam Wiggins.  Major updates by Ricardo Chimal, Jr.
-
-Patches contributed by Michael Irwin, Tom Locke, and Tim Galeckas.
+Created by Orion Henry and Adam Wiggins. Major updates by Ricardo Chimal Jr. and Nate Kidwell.
