@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Adam Wiggins", "Orion Henry"]
   s.summary       = %q{yaml_db allows export/import of database into/from yaml files}
   s.description   = "\nYamlDb is a database-independent format for dumping and restoring data.  It complements the the database-independent schema format found in db/schema.rb.  The data is saved into db/data.yml.\nThis can be used as a replacement for mysqldump or pg_dump, but only for the databases typically used by Rails apps.  Users, permissions, schemas, triggers, and other advanced database features are not supported - by design.\nAny database that has an ActiveRecord adapter should work.\n"
-  s.homepage      = "http://github.com/ludicast/yaml_db"
+  s.homepage      = "https://github.com/yamldb/yaml_db"
   s.license       = "MIT"
 
   s.extra_rdoc_files = ["README.md"]
