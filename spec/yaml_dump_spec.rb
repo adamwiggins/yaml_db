@@ -14,13 +14,13 @@ RSpec.describe YamlDb::Dump do
     @io = StringIO.new
   end
 
-  it "should return a formatted string" do
+  it "returns a formatted string" do
     YamlDb::Dump.table_record_header(@io)
     @io.rewind
     expect(@io.read).to eq("  records: \n")
   end
 
-  it "should return a yaml string that contains a table header and column names" do
+  it "returns a yaml string that contains a table header and column names" do
     allow(YamlDb::Dump).to receive(:table_column_names).with('mytable').and_return([ 'a', 'b' ])
     YamlDb::Dump.dump_table_columns(@io, 'mytable')
     @io.rewind
@@ -47,7 +47,7 @@ EOYAML
     end
   end
 
-  it "should return dump the records for a table in yaml to a given io stream" do
+  it "dumps the records for a table in yaml to a given io stream" do
     YamlDb::Dump.dump_table_records(@io, 'mytable')
     @io.rewind
     expect(@io.read).to eq(<<EOYAML

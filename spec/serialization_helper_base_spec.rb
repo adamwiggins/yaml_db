@@ -28,7 +28,7 @@ RSpec.describe SerializationHelper::Base do
       expect(@dumper).to receive(:dump_table).once.with(@io, "mytable")
     end
 
-    it "should create the number of files that there are tables" do
+    it "creates the number of files that there are tables" do
        SerializationHelper::Base.new(@helper).dump_to_dir "dir_name"
     end
 
@@ -42,7 +42,7 @@ RSpec.describe SerializationHelper::Base do
       allow(Dir).to receive(:entries).and_return(["mytable.yml"])
     end
 
-    it "should insert into then umber of tables that there are files" do
+    it "inserts into the number of tables that there are files" do
       SerializationHelper::Base.new(@helper).load_from_dir "dir_name"
     end
   end

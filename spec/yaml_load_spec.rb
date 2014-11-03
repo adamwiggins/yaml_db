@@ -13,7 +13,7 @@ RSpec.describe YamlDb::Load do
     @io = StringIO.new
   end
 
-  it "should call load structure for each document in the file" do
+  it "calls load structure for each document in the file" do
     expect(YAML).to receive(:load_documents).with(@io).and_yield({ 'mytable' => {
           'columns' => [ 'a', 'b' ],
           'records' => [[1, 2], [3, 4]]
@@ -22,7 +22,7 @@ RSpec.describe YamlDb::Load do
     YamlDb::Load.load(@io)
   end
 
-  it "should not call load structure when the document in the file contains no records" do
+  it "calls load structure when the document in the file contains no records" do
     expect(YAML).to receive(:load_documents).with(@io).and_yield({ 'mytable' => nil })
     expect(YamlDb::Load).not_to receive(:load_table)
     YamlDb::Load.load(@io)

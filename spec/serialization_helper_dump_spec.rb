@@ -14,25 +14,25 @@ RSpec.describe SerializationHelper::Dump do
     @io = StringIO.new
   end
 
-  it "should return a list of column names" do
+  it "returns a list of column names" do
     expect(SerializationHelper::Dump.table_column_names('mytable')).to eq([ 'a', 'b' ])
   end
 
-  it "should return a list of tables without the rails schema table" do
+  it "returns a list of tables without the rails schema table" do
     expect(SerializationHelper::Dump.tables).to eq(['mytable'])
   end
 
-  it "should return the total number of records in a table" do
+  it "returns the total number of records in a table" do
     expect(SerializationHelper::Dump.table_record_count('mytable')).to eq(2)
   end
 
-  it "should return all records from the database and return them when there is only 1 page" do
+  it "returns all records from the database and returns them when there is only 1 page" do
     SerializationHelper::Dump.each_table_page('mytable') do |records|
       expect(records).to eq([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
     end
   end
 
-  it "should paginate records from the database and return them" do
+  it "paginates records from the database and returns them" do
     allow(ActiveRecord::Base.connection).to receive(:select_all).and_return([ { 'a' => 1, 'b' => 2 } ], [ { 'a' => 3, 'b' => 4 } ])
 
     records = [ ]
@@ -44,13 +44,13 @@ RSpec.describe SerializationHelper::Dump do
     expect(records).to eq([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
   end
 
-  it "should dump a table's contents to yaml" do
+  it "dumps a table's contents to yaml" do
     expect(SerializationHelper::Dump).to receive(:dump_table_columns)
     expect(SerializationHelper::Dump).to receive(:dump_table_records)
     SerializationHelper::Dump.dump_table(@io, 'mytable')
   end
 
-  it "should not dump a table's contents when the record count is zero" do
+  it "does not dump a table's contents when the record count is zero" do
     allow(SerializationHelper::Dump).to receive(:table_record_count).with('mytable').and_return(0)
     expect(SerializationHelper::Dump).not_to receive(:dump_table_columns)
     expect(SerializationHelper::Dump).not_to receive(:dump_table_records)
