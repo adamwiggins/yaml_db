@@ -24,7 +24,7 @@ namespace :db do
     desc "Dump contents of database to curr_dir_name/tablename.extension (defaults to yaml)"
     task :dump_dir => :environment do
       format_class = ENV['class'] || "YamlDb::Helper"
-      dir = ENV['dir'] || "#{Time.now.to_s.gsub(/ /, '_')}"
+      dir = ENV['dir'] || "#{Time.now.strftime('%F_%T')}"
       SerializationHelper::Base.new(format_class.constantize).dump_to_dir dump_dir("/#{dir}")
     end
 
