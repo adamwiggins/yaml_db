@@ -4,6 +4,7 @@ require 'active_record'
 require 'serialization_helper'
 require 'active_support/core_ext/kernel/reporting'
 require 'rails/railtie'
+require 'yaml_db/rake_tasks'
 require 'yaml_db/version'
 
 module YamlDb
