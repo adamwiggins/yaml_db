@@ -61,9 +61,9 @@ module YamlDb
 
       def self.truncate_table(table)
         begin
-          ActiveRecord::Base.connection.execute("TRUNCATE #{SerializationHelper::Utils.quote_table(table)}")
+          ActiveRecord::Base.connection.execute("TRUNCATE #{Utils.quote_table(table)}")
         rescue Exception
-          ActiveRecord::Base.connection.execute("DELETE FROM #{SerializationHelper::Utils.quote_table(table)}")
+          ActiveRecord::Base.connection.execute("DELETE FROM #{Utils.quote_table(table)}")
         end
       end
 
@@ -82,7 +82,7 @@ module YamlDb
         end
         columns = column_names.map{|cn| ActiveRecord::Base.connection.columns(table).detect{|c| c.name == cn}}
         quoted_column_names = column_names.map { |column| ActiveRecord::Base.connection.quote_column_name(column) }.join(',')
-        quoted_table_name = SerializationHelper::Utils.quote_table(table)
+        quoted_table_name = Utils.quote_table(table)
         records.each do |record|
           quoted_values = record.zip(columns).map{|c| ActiveRecord::Base.connection.quote(c.first, c.last)}.join(',')
           ActiveRecord::Base.connection.execute("INSERT INTO #{quoted_table_name} (#{quoted_column_names}) VALUES (#{quoted_values})")
@@ -177,19 +177,19 @@ module YamlDb
         total_count = table_record_count(table)
         pages = (total_count.to_f / records_per_page).ceil - 1
         id = table_column_names(table).first
-        boolean_columns = SerializationHelper::Utils.boolean_columns(table)
-        quoted_table_name = SerializationHelper::Utils.quote_table(table)
+        boolean_columns = Utils.boolean_columns(table)
+        quoted_table_name = Utils.quote_table(table)
 
         (0..pages).to_a.each do |page|
           query = Arel::Table.new(table, ActiveRecord::Base).order(id).skip(records_per_page*page).take(records_per_page).project(Arel.sql('*'))
           records = ActiveRecord::Base.connection.select_all(query.to_sql)
-          records = SerializationHelper::Utils.convert_booleans(records, boolean_columns)
+          records = Utils.convert_booleans(records, boolean_columns)
           yield records
         end
       end
 
       def self.table_record_count(table)
-        ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{SerializationHelper::Utils.quote_table(table)}").values.first.to_i
+        ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{Utils.quote_table(table)}").values.first.to_i
       end
 
     end

@@ -31,7 +31,7 @@ module YamlDb
         end
 
         it "creates the number of files that there are tables" do
-           SerializationHelper::Base.new(@helper).dump_to_dir "dir_name"
+           Base.new(@helper).dump_to_dir "dir_name"
         end
 
       end
@@ -45,7 +45,7 @@ module YamlDb
         end
 
         it "inserts into the number of tables that there are files" do
-          SerializationHelper::Base.new(@helper).load_from_dir "dir_name"
+          Base.new(@helper).load_from_dir "dir_name"
         end
       end
 

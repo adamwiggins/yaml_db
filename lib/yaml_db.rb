@@ -10,11 +10,11 @@ require 'yaml_db/serialization_helper'
 module YamlDb
   module Helper
     def self.loader
-      YamlDb::Load
+      Load
     end
 
     def self.dumper
-      YamlDb::Dump
+      Dump
     end
 
     def self.extension
@@ -47,7 +47,7 @@ module YamlDb
 
       each_table_page(table) do |records|
         rows = SerializationHelper::Utils.unhash_records(records.to_a, column_names)
-        io.write(YamlDb::Utils.chunk_records(rows))
+        io.write(Utils.chunk_records(rows))
       end
     end
 

@@ -7,7 +7,7 @@ module YamlDb
       allow(ActiveRecord::Base.connection).to receive(:columns).with('mytable').and_return([ double('a',:name => 'a', :type => :string), double('b', :name => 'b', :type => :string) ])
       allow(ActiveRecord::Base.connection).to receive(:select_one).and_return({"count"=>"2"})
       allow(ActiveRecord::Base.connection).to receive(:select_all).and_return([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
-      allow(YamlDb::Utils).to receive(:quote_table).with('mytable').and_return('mytable')
+      allow(Utils).to receive(:quote_table).with('mytable').and_return('mytable')
     end
 
     before(:each) do
@@ -16,14 +16,14 @@ module YamlDb
     end
 
     it "returns a formatted string" do
-      YamlDb::Dump.table_record_header(@io)
+      Dump.table_record_header(@io)
       @io.rewind
       expect(@io.read).to eq("  records: \n")
     end
 
     it "returns a yaml string that contains a table header and column names" do
-      allow(YamlDb::Dump).to receive(:table_column_names).with('mytable').and_return([ 'a', 'b' ])
-      YamlDb::Dump.dump_table_columns(@io, 'mytable')
+      allow(Dump).to receive(:table_column_names).with('mytable').and_return([ 'a', 'b' ])
+      Dump.dump_table_columns(@io, 'mytable')
       @io.rewind
       if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('1.9.3')
         expect(@io.read).to eq(<<EOYAML
@@ -49,7 +49,7 @@ EOYAML
     end
 
     it "dumps the records for a table in yaml to a given io stream" do
-      YamlDb::Dump.dump_table_records(@io, 'mytable')
+      Dump.dump_table_records(@io, 'mytable')
       @io.rewind
       expect(@io.read).to eq(<<EOYAML
   records: 

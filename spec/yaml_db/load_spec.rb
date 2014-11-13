@@ -19,14 +19,14 @@ module YamlDb
             'columns' => [ 'a', 'b' ],
             'records' => [[1, 2], [3, 4]]
           } } )
-      expect(YamlDb::Load).to receive(:load_table).with('mytable', { 'columns' => [ 'a', 'b' ], 'records' => [[1, 2], [3, 4]] },true)
-      YamlDb::Load.load(@io)
+      expect(Load).to receive(:load_table).with('mytable', { 'columns' => [ 'a', 'b' ], 'records' => [[1, 2], [3, 4]] },true)
+      Load.load(@io)
     end
 
     it "calls load structure when the document in the file contains no records" do
       expect(YAML).to receive(:load_documents).with(@io).and_yield({ 'mytable' => nil })
-      expect(YamlDb::Load).not_to receive(:load_table)
-      YamlDb::Load.load(@io)
+      expect(Load).not_to receive(:load_table)
+      Load.load(@io)
     end
 
   end
