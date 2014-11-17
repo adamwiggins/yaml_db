@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.license       = "MIT"
 
   s.extra_rdoc_files = ["README.md"]
-  s.files = Dir['README.md', 'init.rb', 'lib/**/*']
+  s.files = Dir['README.md', 'lib/**/*']
   s.require_paths = ["lib"]
 
   s.required_ruby_version = ">= 1.8.7"
