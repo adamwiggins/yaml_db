@@ -24,7 +24,7 @@ module YamlDb
 
       context "for multi-file dumps" do
         before do
-          expect(File).to receive(:new).once.with("dir_name/mytable.yml", "w").and_return(@io)
+          expect(File).to receive(:open).once.with("dir_name/mytable.yml", "w").and_yield(@io)
           expect(Dir).to receive(:mkdir).once.with("dir_name")
           stub_helper!
           expect(@dumper).to receive(:dump_table).once.with(@io, "mytable")
