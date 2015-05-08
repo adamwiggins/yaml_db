@@ -12,7 +12,9 @@ module YamlDb
 
       def dump(filename)
         disable_logger
-        @dumper.dump(File.new(filename, "w"))
+        File.open(filename, "w") do |file|
+          @dumper.dump(file)
+        end
         reenable_logger
       end
 
@@ -20,10 +22,11 @@ module YamlDb
         Dir.mkdir(dirname)
         tables = @dumper.tables
         tables.each do |table|
-          io = File.new "#{dirname}/#{table}.#{@extension}", "w"
-          @dumper.before_table(io, table)
-          @dumper.dump_table io, table
-          @dumper.after_table(io, table)
+          File.open("#{dirname}/#{table}.#{@extension}", "w") do |io|
+            @dumper.before_table(io, table)
+            @dumper.dump_table io, table
+            @dumper.after_table(io, table)
+          end
         end
       end
 

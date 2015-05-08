@@ -11,7 +11,7 @@ module YamlDb
     end
 
     before(:each) do
-      allow(File).to receive(:new).with('dump.yml', 'w').and_return(StringIO.new)
+      allow(File).to receive(:open).with('dump.yml', 'w').and_yield(StringIO.new)
       @io = StringIO.new
     end
 
