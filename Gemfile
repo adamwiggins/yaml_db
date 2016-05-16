@@ -8,4 +8,9 @@ gem 'rails', ENV['RAILS_VERSION']
 if RUBY_VERSION.start_with?('1.8.7', '1.9.2')
   gem 'i18n', '~> 0.6.4'
   gem 'rack-cache', '1.2'
+  gem 'rake', '~> 10.5'
+end
+
+if RUBY_VERSION.start_with?('1.')
+  gem 'mime-types', '< 2.99'
 end
