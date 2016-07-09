@@ -6,6 +6,7 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
+  - 2.3.1
 env:
   - RAILS_VERSION='~> 3.0.0'
   - RAILS_VERSION='~> 3.1.0'
@@ -28,5 +29,10 @@ matrix:
       rvm: 1.8.7
     - env: RAILS_VERSION='~> 4.2.0'
       rvm: 1.9.2
+  include:
+    - env: RAILS_VERSION='~> 5.0.0'
+      rvm: 2.2.5
+    - env: RAILS_VERSION='~> 5.0.0'
+      rvm: 2.3.1
 before_install:
   - gem update bundler
