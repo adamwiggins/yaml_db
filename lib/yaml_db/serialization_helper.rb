@@ -184,7 +184,7 @@ module YamlDb
         quoted_table_name = Utils.quote_table(table)
 
         (0..pages).to_a.each do |page|
-          query = Arel::Table.new(table, ActiveRecord::Base).order(id).skip(records_per_page*page).take(records_per_page).project(Arel.sql('*'))
+          query = Arel::Table.new(table).order(id).skip(records_per_page*page).take(records_per_page).project(Arel.sql('*'))
           records = ActiveRecord::Base.connection.select_all(query.to_sql)
           records = Utils.convert_booleans(records, boolean_columns)
           yield records
