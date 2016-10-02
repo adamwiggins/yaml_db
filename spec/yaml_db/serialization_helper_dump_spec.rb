@@ -20,10 +20,6 @@ module YamlDb
         expect(Dump.table_column_names('mytable')).to eq([ 'a', 'b' ])
       end
 
-      it "returns a list of tables without the rails schema table" do
-        expect(Dump.tables).to eq(['mytable'])
-      end
-
       it "returns the total number of records in a table" do
         expect(Dump.table_record_count('mytable')).to eq(2)
       end
@@ -59,6 +55,16 @@ module YamlDb
         Dump.dump_table(@io, 'mytable')
       end
 
+      describe ".tables" do
+        it "returns a list of tables without the rails schema table" do
+          expect(Dump.tables).to eq(['mytable'])
+        end
+
+        it "returns the list of tables in a consistent (sorted) order" do
+          allow(ActiveRecord::Base.connection).to receive(:tables).and_return(%w(z y x))
+          expect(Dump.tables).to eq(%w(x y z))
+        end
+      end
     end
   end
 end
