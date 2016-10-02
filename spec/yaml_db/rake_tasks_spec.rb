@@ -27,14 +27,14 @@ module YamlDb
     describe '.data_dump_dir_task' do
       it 'dumps to a directory' do
         expect(SerializationHelper::Base).to receive(:new).once.with(Helper)
-        expect(@serializer).to receive(:dump_to_dir).once.with('/root/db/2007-08-09_12:34:56')
+        expect(@serializer).to receive(:dump_to_dir).once.with('/root/db/2007-08-09T123456')
         RakeTasks.data_dump_dir_task
       end
 
       it 'dumps to a directory using a user-specified format class' do
         stub_const('ENV', 'class' => 'UserSpecifiedHelper')
         expect(SerializationHelper::Base).to receive(:new).once.with(UserSpecifiedHelper)
-        expect(@serializer).to receive(:dump_to_dir).once.with('/root/db/2007-08-09_12:34:56')
+        expect(@serializer).to receive(:dump_to_dir).once.with('/root/db/2007-08-09T123456')
         RakeTasks.data_dump_dir_task
       end
 
