@@ -1,3 +1,12 @@
+## yaml_db 0.4.2
+
+* Use Windows-compatible directory names
+* Sort tables in the dump so that two dumps can reliably be diffed
+
+## yaml_db 0.4.1
+
+Version skipped due to developer error
+
 ## yaml_db 0.4.0
 
 * Put everything under the YamlDb module namespace
