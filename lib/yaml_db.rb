@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'yaml'
 require 'active_record'
-require 'active_support/core_ext/kernel/reporting'
 require 'rails/railtie'
 require 'yaml_db/rake_tasks'
 require 'yaml_db/version'

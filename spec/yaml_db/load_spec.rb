@@ -1,5 +1,3 @@
-require 'active_support/core_ext/kernel/debugger'
-
 module YamlDb
   RSpec.describe Load do
 
