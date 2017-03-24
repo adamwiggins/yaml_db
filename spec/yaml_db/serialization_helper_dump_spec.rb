@@ -24,22 +24,28 @@ module YamlDb
         expect(Dump.table_record_count('mytable')).to eq(2)
       end
 
-      it "returns all records from the database and returns them when there is only 1 page" do
-        Dump.each_table_page('mytable') do |records|
+      describe ".each_table_page" do
+        before do
+          allow(Dump).to receive(:sort_key)
+        end
+
+        it "returns all records from the database and returns them when there is only 1 page" do
+          Dump.each_table_page('mytable') do |records|
+            expect(records).to eq([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
+          end
+        end
+
+        it "paginates records from the database and returns them" do
+          allow(ActiveRecord::Base.connection).to receive(:select_all).and_return([ { 'a' => 1, 'b' => 2 } ], [ { 'a' => 3, 'b' => 4 } ])
+
+          records = [ ]
+          Dump.each_table_page('mytable', 1) do |page|
+            expect(page.size).to eq(1)
+            records.concat(page)
+          end
+
           expect(records).to eq([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
         end
-      end
-
-      it "paginates records from the database and returns them" do
-        allow(ActiveRecord::Base.connection).to receive(:select_all).and_return([ { 'a' => 1, 'b' => 2 } ], [ { 'a' => 3, 'b' => 4 } ])
-
-        records = [ ]
-        Dump.each_table_page('mytable', 1) do |page|
-          expect(page.size).to eq(1)
-          records.concat(page)
-        end
-
-        expect(records).to eq([ { 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 } ])
       end
 
       it "dumps a table's contents to yaml" do
@@ -67,6 +73,10 @@ module YamlDb
       end
 
       describe ".sort_key" do
+        before do
+          allow(Utils).to receive(:quote_column) { |column| column }
+        end
+
         it "returns the first column as sort key" do
           expect(Dump.sort_key('mytable')).to eq('a')
         end
@@ -78,6 +88,11 @@ module YamlDb
           ])
 
           expect(Dump.sort_key('mytable')).to eq(['a_id', 'b_id'])
+        end
+
+        it "quotes the column name" do
+          allow(Utils).to receive(:quote_column).with('a').and_return('`a`')
+          expect(Dump.sort_key('mytable')).to eq('`a`')
         end
       end
     end

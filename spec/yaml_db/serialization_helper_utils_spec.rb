@@ -49,6 +49,12 @@ module YamlDb
         expect(Utils.convert_boolean(0)).to be false
       end
 
+      describe ".quote_column" do
+        it "quotes the column name" do
+          allow(ActiveRecord::Base.connection).to receive(:quote_column_name).with('id').and_return('`id`')
+          expect(Utils.quote_column('id')).to eq('`id`')
+        end
+      end
     end
   end
 end

@@ -49,6 +49,9 @@ EOYAML
     end
 
     it "dumps the records for a table in yaml to a given io stream" do
+      allow(SerializationHelper::Dump).to receive(:each_table_page).with('mytable').and_yield(
+        [{ 'a' => 1, 'b' => 2 }, { 'a' => 3, 'b' => 4 }]
+      )
       Dump.dump_table_records(@io, 'mytable')
       @io.rewind
       expect(@io.read).to eq(<<EOYAML

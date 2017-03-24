@@ -141,6 +141,9 @@ module YamlDb
         ActiveRecord::Base.connection.quote_table_name(table)
       end
 
+      def self.quote_column(column)
+        ActiveRecord::Base.connection.quote_column_name(column)
+      end
     end
 
     class Dump
@@ -201,9 +204,9 @@ module YamlDb
         first_column, second_column = table_column_names(table)
 
         if [first_column, second_column].all? { |name| name =~ /_id$/ }
-          [first_column, second_column]
+          [Utils.quote_column(first_column), Utils.quote_column(second_column)]
         else
-          first_column
+          Utils.quote_column(first_column)
         end
       end
     end
