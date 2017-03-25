@@ -35,15 +35,12 @@ module YamlDb
       end
 
       it "inserts records into a table" do
-        mca = double('a',:name => 'a')
-        mcb = double('b', :name => 'b')
-        allow(ActiveRecord::Base.connection).to receive(:columns).with('mytable').and_return([mca , mcb ])
         allow(ActiveRecord::Base.connection).to receive(:quote_column_name).with('a').and_return('a')
         allow(ActiveRecord::Base.connection).to receive(:quote_column_name).with('b').and_return('b')
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(1, mca).and_return("'1'")
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(2, mcb).and_return("'2'")
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(3, mca).and_return("'3'")
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(4, mcb).and_return("'4'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(1).and_return("'1'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(2).and_return("'2'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(3).and_return("'3'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(4).and_return("'4'")
         expect(ActiveRecord::Base.connection).to receive(:execute).with("INSERT INTO mytable (a,b) VALUES ('1','2')")
         expect(ActiveRecord::Base.connection).to receive(:execute).with("INSERT INTO mytable (a,b) VALUES ('3','4')")
 
@@ -51,15 +48,12 @@ module YamlDb
       end
 
       it "quotes column names that correspond to sql keywords" do
-        mca = double('a',:name => 'a')
-        mccount = double('count', :name => 'count')
-        allow(ActiveRecord::Base.connection).to receive(:columns).with('mytable').and_return([mca , mccount ])
         allow(ActiveRecord::Base.connection).to receive(:quote_column_name).with('a').and_return('a')
         allow(ActiveRecord::Base.connection).to receive(:quote_column_name).with('count').and_return('"count"')
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(1, mca).and_return("'1'")
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(2, mccount).and_return("'2'")
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(3, mca).and_return("'3'")
-        allow(ActiveRecord::Base.connection).to receive(:quote).with(4, mccount).and_return("'4'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(1).and_return("'1'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(2).and_return("'2'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(3).and_return("'3'")
+        allow(ActiveRecord::Base.connection).to receive(:quote).with(4).and_return("'4'")
         expect(ActiveRecord::Base.connection).to receive(:execute).with("INSERT INTO mytable (a,\"count\") VALUES ('1','2')")
         expect(ActiveRecord::Base.connection).to receive(:execute).with("INSERT INTO mytable (a,\"count\") VALUES ('3','4')")
 
