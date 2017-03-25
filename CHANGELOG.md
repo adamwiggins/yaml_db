@@ -1,3 +1,7 @@
+## yaml_db 0.5.0
+
+* Order HABTM tables using both IDs (@mauriciopasquier)
+
 ## yaml_db 0.4.2
 
 * Use Windows-compatible directory names
