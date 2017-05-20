@@ -6,7 +6,7 @@ This can be used as a replacement for mysqldump or pg_dump, but only for the dat
 
 Any database that has an ActiveRecord adapter should work.
 
-This gem supports Rails 3.x, 4.x, and 5.0.
+This gem supports Rails versions 3.0 through 5.1.
 
 [![Build Status](https://travis-ci.org/yamldb/yaml_db.svg?branch=master)](https://travis-ci.org/yamldb/yaml_db)
 
