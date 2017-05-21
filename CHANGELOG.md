@@ -1,3 +1,8 @@
+## yaml_db 0.6.0
+
+* Add Rails 5.1 support
+* Fix a bug that caused errors when dumping HABTM tables
+
 ## yaml_db 0.5.0
 
 * Order HABTM tables using both IDs (@mauriciopasquier)
