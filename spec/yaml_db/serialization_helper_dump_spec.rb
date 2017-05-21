@@ -26,7 +26,7 @@ module YamlDb
 
       describe ".each_table_page" do
         before do
-          allow(Dump).to receive(:sort_key)
+          allow(Dump).to receive(:sort_keys)
         end
 
         it "returns all records from the database and returns them when there is only 1 page" do
@@ -72,13 +72,13 @@ module YamlDb
         end
       end
 
-      describe ".sort_key" do
+      describe ".sort_keys" do
         before do
           allow(Utils).to receive(:quote_column) { |column| column }
         end
 
         it "returns the first column as sort key" do
-          expect(Dump.sort_key('mytable')).to eq('a')
+          expect(Dump.sort_keys('mytable')).to eq(['a'])
         end
 
         it "returns the combined ids as sort key if the table looks like a HABTM" do
@@ -87,12 +87,12 @@ module YamlDb
             double('b_id', :name => 'b_id', :type => :string)
           ])
 
-          expect(Dump.sort_key('mytable')).to eq(['a_id', 'b_id'])
+          expect(Dump.sort_keys('mytable')).to eq(['a_id', 'b_id'])
         end
 
         it "quotes the column name" do
           allow(Utils).to receive(:quote_column).with('a').and_return('`a`')
-          expect(Dump.sort_key('mytable')).to eq('`a`')
+          expect(Dump.sort_keys('mytable')).to eq(['`a`'])
         end
       end
     end

@@ -183,12 +183,12 @@ module YamlDb
       def self.each_table_page(table, records_per_page=1000)
         total_count = table_record_count(table)
         pages = (total_count.to_f / records_per_page).ceil - 1
-        key = sort_key(table)
+        keys = sort_keys(table)
         boolean_columns = Utils.boolean_columns(table)
         quoted_table_name = Utils.quote_table(table)
 
         (0..pages).to_a.each do |page|
-          query = Arel::Table.new(table).order(key).skip(records_per_page*page).take(records_per_page).project(Arel.sql('*'))
+          query = Arel::Table.new(table).order(*keys).skip(records_per_page*page).take(records_per_page).project(Arel.sql('*'))
           records = ActiveRecord::Base.connection.select_all(query.to_sql)
           records = Utils.convert_booleans(records, boolean_columns)
           yield records
@@ -199,15 +199,15 @@ module YamlDb
         ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{Utils.quote_table(table)}").values.first.to_i
       end
 
-      # Just return the first column as sort key unless the table looks like a
-      # standard HABTM join table, in which case add the second "id column"
-      def self.sort_key(table)
+      # Return the first column as sort key unless the table looks like a
+      # standard has_and_belongs_to_many join table, in which case add the second "ID column"
+      def self.sort_keys(table)
         first_column, second_column = table_column_names(table)
 
         if [first_column, second_column].all? { |name| name =~ /_id$/ }
           [Utils.quote_column(first_column), Utils.quote_column(second_column)]
         else
-          Utils.quote_column(first_column)
+          [Utils.quote_column(first_column)]
         end
       end
     end
