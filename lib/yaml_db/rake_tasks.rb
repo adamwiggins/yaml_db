@@ -1,7 +1,7 @@
 module YamlDb
   module RakeTasks
-    def self.data_dump_task
-      SerializationHelper::Base.new(helper).dump(db_dump_data_file(helper.extension))
+    def self.data_dump_task filename=nil
+      SerializationHelper::Base.new(helper).dump(db_dump_data_file(helper.extension, filename))
     end
 
     def self.data_dump_dir_task
@@ -9,13 +9,17 @@ module YamlDb
       SerializationHelper::Base.new(helper).dump_to_dir(dump_dir("/#{dir}"))
     end
 
-    def self.data_load_task
-      SerializationHelper::Base.new(helper).load(db_dump_data_file(helper.extension))
+    def self.data_load_task filename=nil
+      SerializationHelper::Base.new(helper).load(db_dump_data_file(helper.extension, filename))
     end
 
     def self.data_load_dir_task
       dir = ENV['dir'] || 'base'
       SerializationHelper::Base.new(helper).load_from_dir(dump_dir("/#{dir}"))
+    end
+
+    def self.default_filename
+      'data'
     end
 
     private
@@ -24,8 +28,19 @@ module YamlDb
       Time.now.strftime('%FT%H%M%S')
     end
 
-    def self.db_dump_data_file(extension = 'yml')
-      "#{dump_dir}/data.#{extension}"
+    def self.db_dump_data_file(extension = 'yml', filename=nil)
+      filename = check_filename(filename)
+      "#{dump_dir}/#{filename}.#{extension}"
+    end
+
+    def self.check_filename filename=nil
+      if filename == nil
+        p "using default filename #{default_filename}"
+        default_filename
+      else
+        p "using #{filename}"
+        filename
+      end
     end
 
     def self.dump_dir(dir = '')
